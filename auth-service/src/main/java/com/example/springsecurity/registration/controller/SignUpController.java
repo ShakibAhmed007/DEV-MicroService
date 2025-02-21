@@ -2,7 +2,7 @@ package com.example.springsecurity.registration.controller;
 
 import com.example.springsecurity.registration.dto.UserCreatedResponseDTO;
 import com.example.springsecurity.registration.dto.UserDTO;
-import com.example.springsecurity.exception.ErrorResponse;
+import com.example.springsecurity.responsemodel.ErrorResponse;
 import com.example.springsecurity.registration.entity.User;
 import com.example.springsecurity.registration.services.UserService;
 import jakarta.validation.Valid;

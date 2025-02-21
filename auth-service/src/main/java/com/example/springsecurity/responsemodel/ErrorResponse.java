@@ -1,4 +1,4 @@
-package com.example.springsecurity.exception;
+package com.example.springsecurity.responsemodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

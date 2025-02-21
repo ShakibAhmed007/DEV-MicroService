@@ -22,26 +22,32 @@ import java.util.stream.Collectors;
 public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null){
-            Environment environment = getEnvironment();
-            if(environment != null){
-               String secret = environment.getProperty(ApplicationConstants.JWT_SECRET, ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
-                SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-                String jwt = Jwts.builder().issuer("SPRING_SECURITY").subject("JWT_TOKEN")
-                        .claim("username", authentication.getName())
-                        .claim("authorities", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
-                        .issuedAt(new Date())
-                        .expiration(new Date((new Date()).getTime() + 300000000))
-                        .signWith(secretKey).compact();
-                response.setHeader(ApplicationConstants.JWT_HEADER, jwt);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                Environment environment = getEnvironment();
+                if (environment != null) {
+                    String secret = environment.getProperty(ApplicationConstants.JWT_SECRET, ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
+                    SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+                    String jwt = Jwts.builder().issuer("SPRING_SECURITY").subject("JWT_TOKEN")
+                            .claim("username", authentication.getName())
+                            .claim("authorities", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
+                            .issuedAt(new Date())
+                            .expiration(new Date((new Date()).getTime() + 300000000))
+                            .signWith(secretKey).compact();
+                    response.setHeader(ApplicationConstants.JWT_HEADER, jwt);
+                }
             }
+            response.setStatus(HttpServletResponse.SC_CREATED);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // Set the response status to 500 Internal Server Error
+            response.getWriter().write("Error generating JWT token: " + e.getMessage());
         }
-        filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getServletPath().equals("/login");
+        return !request.getServletPath().equals("/auth/login");
     }
 }

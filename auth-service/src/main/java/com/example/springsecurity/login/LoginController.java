@@ -1,27 +1,15 @@
 package com.example.springsecurity.login;
 
-import com.example.springsecurity.registration.entity.User;
-import com.example.springsecurity.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springsecurity.login.model.LoginRequestModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class LoginController {
 
-    @Autowired
-    UserRepository userRepository;
-
-    @GetMapping
-    public User login(Authentication authentication){
-        User user = userRepository.findByEmail(authentication.getName());
-        if(user != null){
-            return user;
-        } else {
-            return null;
-        }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestModel requestModel) {
+        return ResponseEntity.ok("Login request received. Authentication is handled by the filter.");
     }
 }

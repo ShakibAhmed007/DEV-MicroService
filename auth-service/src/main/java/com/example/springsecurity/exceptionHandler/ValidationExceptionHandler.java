@@ -1,6 +1,6 @@
 package com.example.springsecurity.exceptionHandler;
 
-import com.example.springsecurity.exception.ErrorResponse;
+import com.example.springsecurity.responsemodel.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
