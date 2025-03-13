@@ -1,13 +1,12 @@
 package com.example.microservice.customer_service.controller;
 
-import com.example.microservice.customer_service.entity.Customer;
+import com.example.microservice.customer_service.dto.CustomerRequest;
+import com.example.microservice.customer_service.dto.CustomerResponse;
 import com.example.microservice.customer_service.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +18,30 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponse createCustomer(@RequestBody CustomerRequest customerRequest) {
+        return customerService.createCustomer(customerRequest);
+    }
+
+    @GetMapping("/getById/{id}")
+    public CustomerResponse getCustomerById(@PathVariable Integer id) {
+        return customerService.getCustomerById(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public CustomerResponse updateCustomer(@PathVariable Integer id, @RequestBody CustomerRequest customerRequest) {
+        return customerService.updateCustomer(id, customerRequest);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCustomer(@PathVariable Integer id) {
+        customerService.deleteCustomer(id);
+    }
+
     @GetMapping("/getAll")
-    public ResponseEntity<List<Customer>> getAll() {
-        return ResponseEntity.ok(customerService.getAllCustomers());
+    public List<CustomerResponse> getAllCustomers() {
+        return customerService.getAllCustomers();
     }
 }

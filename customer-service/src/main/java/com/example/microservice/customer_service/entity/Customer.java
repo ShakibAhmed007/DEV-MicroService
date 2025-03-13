@@ -36,10 +36,10 @@ public class Customer implements Serializable {
     private String email;
 
     @Column(name = "address_id")
-    private Short addressId;
+    private Integer addressId;
 
     @Column(name = "activebool")
-    private Boolean activebool;
+    private Boolean activeBool;
 
     @Column(name = "create_date")
     private OffsetDateTime createDate;
@@ -49,4 +49,15 @@ public class Customer implements Serializable {
 
     @Column(name = "active")
     private Integer active;
+
+    @PrePersist
+    public void setCreateDate() {
+        this.createDate = OffsetDateTime.now();
+        this.lastUpdate = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    public void updateLastUpdate() {
+        this.lastUpdate = OffsetDateTime.now();
+    }
 }
