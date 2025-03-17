@@ -7,19 +7,12 @@ info.app.version=1.0.0
 management.endpoints.web.base-path=/
 management.endpoints.web.exposure.include=health,prometheus,info
 
-# discovery client config
-eureka.client.serviceUrl.defaultZone=http://localhost:8761/eureka
+# devtools
 spring.devtools.restart.enabled=true
-
-# rabbitmq config
-spring.rabbitmq.host=localhost
-spring.rabbitmq.port=5672
-spring.rabbitmq.username=guest
-spring.rabbitmq.password=guest
 
 # zipkin
 management.tracing.sampling.probability=1.0
 logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
 logging.level.com.example.addressservice.service.AddressService=DEBUG
 
-logging.file=address-service.log
+logging.file.name=address-service.log
